@@ -5,6 +5,12 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\Admin\UserProfileController;
+
+use App\Http\Controllers\Api\LeaveRequestController;
+use App\Http\Controllers\Api\Admin\LeaveRequestController as AdminLeaveRequestController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -35,6 +41,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
+
+    Route::get('/leave-requests', [LeaveRequestController::class, 'index']);
+    Route::post('/leave-requests', [LeaveRequestController::class, 'store']);
+
     Route::middleware('role:admin')->group(function() {
         Route::get('/admin/test', function () {
             return response()->json([
@@ -43,8 +55,17 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 
+
+// ADMIN GROUP
     Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
         Route::apiResource('users', UserController::class);
+
+        Route::get('/users/{user}/profile', [UserProfileController::class, 'show']);
+        Route::put('/users/{user}/profile', [UserProfileController::class, 'update']);
+
+        Route::get('/leave-requests', [AdminLeaveRequestController::class, 'index']);
+        Route::patch('/leave-requests/{leaveRequest}/approve', [AdminLeaveRequestController::class, 'approve']);
+        Route::patch('/leave-requests/{leaveRequest}/reject', [AdminLeaveRequestController::class, 'reject']);
     });
 
 });
