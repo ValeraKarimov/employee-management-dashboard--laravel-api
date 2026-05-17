@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\LeaveRequest;
+use App\Http\Resources\LeaveRequestResource;
 
 class LeaveRequestController extends Controller
 {
@@ -14,9 +15,7 @@ class LeaveRequestController extends Controller
             ->latest()
             ->get();
 
-        return response()->json([
-            'data' => $leaveRequests,
-        ]);
+        return LeaveRequestResource::collection($leaveRequests);
     }
 
     public function approve(LeaveRequest $leaveRequest)
@@ -25,9 +24,11 @@ class LeaveRequestController extends Controller
             'status' => 'approved',
         ]);
 
+        $leaveRequest->load('user:id,name,email,role');
+
         return response()->json([
             'message' => 'Leave request approved successfully.',
-            'data' => $leaveRequest,
+            'data' => new LeaveRequestResource($leaveRequest),
         ]);
     }
 
@@ -37,9 +38,11 @@ class LeaveRequestController extends Controller
             'status' => 'rejected',
         ]);
 
+        $leaveRequest->load('user:id,name,email,role');
+
         return response()->json([
             'message' => 'Leave request rejected successfully.',
-            'data' => $leaveRequest,
+            'data' => new LeaveRequestResource($leaveRequest),
         ]);
     }
 }

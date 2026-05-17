@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProfileResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,21 @@ class UserProfileController extends Controller
 {
     public function show(User $user)
     {
-        return response()->json([
-            'data' => $user->profile,
-        ]);
+
+        $profile = $user->profile;
+
+        if (! $profile) {
+            return response()->json([
+                'data' => null,
+            ]);
+        }
+
+    // return response()->json([
+        //     'data' => $user->profile,
+        // ]);
+
+        return new ProfileResource($profile);
+
     }
 
     public function update(Request $request, User $user)
@@ -30,9 +43,15 @@ class UserProfileController extends Controller
             $validated
         );
 
+        // return response()->json([
+        //     'message' => 'User profile updated successfully.',
+        //     'data' => $profile,
+        // ]);
+
         return response()->json([
             'message' => 'User profile updated successfully.',
-            'data' => $profile,
+            'data' => new ProfileResource($profile),
         ]);
+        
     }
 }

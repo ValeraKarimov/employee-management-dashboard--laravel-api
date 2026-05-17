@@ -11,6 +11,9 @@ use App\Http\Controllers\Api\Admin\UserProfileController;
 use App\Http\Controllers\Api\LeaveRequestController;
 use App\Http\Controllers\Api\Admin\LeaveRequestController as AdminLeaveRequestController;
 
+use App\Http\Controllers\Api\ShiftController;
+use App\Http\Controllers\Api\Admin\ShiftController as AdminShiftController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -47,6 +50,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/leave-requests', [LeaveRequestController::class, 'index']);
     Route::post('/leave-requests', [LeaveRequestController::class, 'store']);
 
+    Route::get('/shifts', [ShiftController::class, 'index']);
+
     Route::middleware('role:admin')->group(function() {
         Route::get('/admin/test', function () {
             return response()->json([
@@ -66,6 +71,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/leave-requests', [AdminLeaveRequestController::class, 'index']);
         Route::patch('/leave-requests/{leaveRequest}/approve', [AdminLeaveRequestController::class, 'approve']);
         Route::patch('/leave-requests/{leaveRequest}/reject', [AdminLeaveRequestController::class, 'reject']);
+        
+        Route::patch('/shifts/{shift}/confirm', [AdminShiftController::class, 'confirm']);
+        Route::patch('/shifts/{shift}/approve-hours', [AdminShiftController::class, 'approveHours']);
+        
+        Route::apiResource('shifts', AdminShiftController::class)
+            ->except(['show']);
     });
 
 });

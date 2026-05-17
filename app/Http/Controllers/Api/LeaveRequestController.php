@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 use App\Models\LeaveRequest;
 
+use App\Http\Resources\LeaveRequestResource;
+
 class LeaveRequestController extends Controller
 {
     public function index(Request $request)
@@ -16,9 +18,11 @@ class LeaveRequestController extends Controller
             ->latest()
             ->get();
 
-        return response()->json([
-            'data' => $leaveRequests,
-        ]);
+        // return response()->json([
+        //     'data' => $leaveRequests,
+        // ]);
+
+        return LeaveRequestResource::collection($leaveRequests);
     }
 
     public function store(Request $request)
@@ -34,9 +38,14 @@ class LeaveRequestController extends Controller
             'status' => 'pending',
         ]);
 
+        // return response()->json([
+        //     'message' => 'Leave request created successfully.',
+        //     'data' => $leaveRequest,
+        // ], 201);
+
         return response()->json([
             'message' => 'Leave request created successfully.',
-            'data' => $leaveRequest,
+            'data' => new LeaveRequestResource($leaveRequest),
         ], 201);
     }
 }

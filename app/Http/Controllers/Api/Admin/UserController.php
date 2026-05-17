@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -10,26 +11,37 @@ class UserController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            'data' => User::query()
-                ->select('id', 'name', 'email', 'role', 'created_at')
-                ->latest()
-                ->get(),
-        ]);
+        // return response()->json([
+        //     'data' => User::query()
+        //         ->select('id', 'name', 'email', 'role', 'created_at')
+        //         ->latest()
+        //         ->get(),
+        // ]);
+
+        $users = User::query()
+            ->latest()
+            ->get();
+
+        return UserResource::collection($users);
     }
 
     public function show(User $user)
     {
-        return response()->json([
-            'data' => $user->only([
-                'id',
-                'name',
-                'email',
-                'role',
-                'created_at',
-                'updated_at',
-            ]),
-        ]);
+        // return response()->json([
+        //     'data' => $user->only([
+        //         'id',
+        //         'name',
+        //         'email',
+        //         'role',
+        //         'created_at',
+        //         'updated_at',
+        //     ]),
+        // ]);
+
+        $user->load('profile');
+
+        return new UserResource($user);
+
     }
 
     public function store(Request $request)
@@ -43,10 +55,16 @@ class UserController extends Controller
 
         $user = User::create($validated);
 
+        // return response()->json([
+        //     'message' => 'User created successfully.',
+        //     'data' => $user->only(['id', 'name', 'email', 'role', 'created_at']),
+        // ], 201);
+
         return response()->json([
-            'message' => 'User created successfully.',
-            'data' => $user->only(['id', 'name', 'email', 'role', 'created_at']),
-        ], 201);
+            'message' => 'User updated successfully.',
+            'data' => new UserResource($user),
+        ]);
+        
     }
 
     public function update(Request $request, User $user)

@@ -52,4 +52,8 @@ class User extends Authenticatable
     public function leaveRequests(): HasMany {
         return $this->hasMany(LeaveRequest::class);
     }
+
+    public function shifts(): HasMany {
+        return $this->hasMany(Shift::class);
+    }
 }
