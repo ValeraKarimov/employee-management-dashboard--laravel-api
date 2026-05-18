@@ -14,6 +14,12 @@ use App\Http\Controllers\Api\Admin\LeaveRequestController as AdminLeaveRequestCo
 use App\Http\Controllers\Api\ShiftController;
 use App\Http\Controllers\Api\Admin\ShiftController as AdminShiftController;
 
+use App\Http\Controllers\Api\DocumentController;
+
+use App\Http\Controllers\Api\Admin\UserDocumentController;
+
+use App\Http\Controllers\Api\DashboardController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -52,6 +58,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/shifts', [ShiftController::class, 'index']);
 
+    Route::get('/documents', [DocumentController::class, 'index']);
+    Route::post('/documents', [DocumentController::class, 'store']);
+    Route::delete('/documents/{document}', [DocumentController::class, 'destroy']);
+
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+
     Route::middleware('role:admin')->group(function() {
         Route::get('/admin/test', function () {
             return response()->json([
@@ -74,6 +86,8 @@ Route::middleware('auth:sanctum')->group(function () {
         
         Route::patch('/shifts/{shift}/confirm', [AdminShiftController::class, 'confirm']);
         Route::patch('/shifts/{shift}/approve-hours', [AdminShiftController::class, 'approveHours']);
+
+        Route::get('/users/{user}/documents', [UserDocumentController::class, 'index']);
         
         Route::apiResource('shifts', AdminShiftController::class)
             ->except(['show']);

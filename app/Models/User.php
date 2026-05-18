@@ -56,4 +56,8 @@ class User extends Authenticatable
     public function shifts(): HasMany {
         return $this->hasMany(Shift::class);
     }
+
+    public function documents(): HasMany {
+        return $this->hasMany(Document::class);
+    }
 }
