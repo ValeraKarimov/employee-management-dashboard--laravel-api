@@ -19,8 +19,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->string('name');
-            $table->string('file_path');
-            $table->string('original_name')->nullable();
+            $table->string('file_path')->nullable();
             $table->string('mime_type')->nullable();
             $table->unsignedBigInteger('size')->nullable();
 

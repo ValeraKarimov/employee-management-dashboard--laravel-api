@@ -19,11 +19,10 @@ class DocumentResource extends JsonResource
             'userId' => $this->user_id,
             'name' => $this->name,
             'filePath' => $this->file_path,
-            'url' => asset('storage/' . $this->file_path),
-            'originalName' => $this->original_name,
+            'filename' => $this->original_name,
             'mimeType' => $this->mime_type,
             'size' => $this->size,
-            'createdAt' => $this->created_at,
+            'uploadedAt' => $this->created_at?->toDateString(),
         ];
 
     }

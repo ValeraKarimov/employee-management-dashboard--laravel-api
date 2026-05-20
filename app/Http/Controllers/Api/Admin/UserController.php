@@ -38,7 +38,12 @@ class UserController extends Controller
         //     ]),
         // ]);
 
-        $user->load('profile');
+        $user->load([            
+            'profile',
+            'documents',
+            'leaveRequests',
+            'shifts',
+        ]);
 
         return new UserResource($user);
 
@@ -51,6 +56,9 @@ class UserController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8'],
             'role' => ['required', 'in:admin,employee'],
+            'department' => ['required', 'max:255'],
+            'position' => ['required', 'max:255'],
+            'status' => ['required', 'max:255']
         ]);
 
         $user = User::create($validated);
@@ -64,7 +72,7 @@ class UserController extends Controller
             'message' => 'User updated successfully.',
             'data' => new UserResource($user),
         ]);
-        
+
     }
 
     public function update(Request $request, User $user)
@@ -74,6 +82,9 @@ class UserController extends Controller
             'email' => ['sometimes', 'required', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'password' => ['nullable', 'string', 'min:8'],
             'role' => ['sometimes', 'required', 'in:admin,employee'],
+            'department' => ['sometimes', 'required', 'max:255'],
+            'position' => ['sometimes', 'required', 'max:255'],
+            'status' => ['sometimes', 'required', 'max:255']
         ]);
 
         if (array_key_exists('password', $validated) && $validated['password'] === null) {

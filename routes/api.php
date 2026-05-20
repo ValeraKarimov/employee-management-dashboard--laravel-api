@@ -88,6 +88,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/shifts/{shift}/approve-hours', [AdminShiftController::class, 'approveHours']);
 
         Route::get('/users/{user}/documents', [UserDocumentController::class, 'index']);
+        Route::get('/documents', [UserDocumentController::class, 'all']);
         
         Route::apiResource('shifts', AdminShiftController::class)
             ->except(['show']);
