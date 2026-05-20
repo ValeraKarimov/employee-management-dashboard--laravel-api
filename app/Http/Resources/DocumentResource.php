@@ -14,6 +14,7 @@ class DocumentResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        
         return [
             'id' => $this->id,
             'userId' => $this->user_id,
@@ -23,6 +24,11 @@ class DocumentResource extends JsonResource
             'mimeType' => $this->mime_type,
             'size' => $this->size,
             'uploadedAt' => $this->created_at?->toDateString(),
+            'user' => $this->whenLoaded('user', fn () => [
+                'id' => $this->user->id,
+                'name' => $this->user->name,
+                'email' => $this->user->email,
+            ]),
         ];
 
     }
