@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\DocumentResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Document;
 
 class DocumentController extends Controller
 {
@@ -51,9 +52,13 @@ class DocumentController extends Controller
 
     public function destroy(Request $request, int $documentId)
     {
-        $document = $request->user()
-            ->documents()
-            ->findOrFail($documentId);
+        $user = $request->user();
+
+        $document = Document::findOrFail($documentId);
+
+        if ($user->role !== 'admin' && $document->user_id !== $user->id) {
+            abort(403);
+        }
 
         Storage::disk('public')->delete($document->file_path);
 
@@ -62,5 +67,5 @@ class DocumentController extends Controller
         return response()->json([
             'message' => 'Document deleted successfully.',
         ]);
-    }
+}
 }
