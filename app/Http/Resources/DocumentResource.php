@@ -20,6 +20,7 @@ class DocumentResource extends JsonResource
             'userId' => $this->user_id,
             'name' => $this->name,
             'filePath' => $this->file_path,
+            'downloadUrl' => asset('storage/' . $this->file_path),
             'filename' => $this->original_name,
             'mimeType' => $this->mime_type,
             'size' => $this->size,
